@@ -1,0 +1,35 @@
+services:
+  ruleta:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ruleta-discoteca:latest
+    container_name: ruleta-discoteca
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DB_PATH: /app/data/ruleta.db
+      UPLOAD_DIR: /app/uploads
+      JWT_SECRET: ${JWT_SECRET:?Definé JWT_SECRET en el archivo .env}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Neon2026!}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:4000}
+      SPIN_RATE_LIMIT: ${SPIN_RATE_LIMIT:-30}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-50}
+    volumes:
+      - ruleta_data:/app/data
+      - ruleta_uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  ruleta_data:
+  ruleta_uploads:

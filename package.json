@@ -1,0 +1,22 @@
+{
+  "name": "ruleta-discoteca",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n API,WEB -c magenta,cyan \"npm:dev -w backend\" \"npm:dev -w frontend\"",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "start": "npm run start -w backend",
+    "seed": "npm run seed -w backend",
+    "test": "npm test -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
